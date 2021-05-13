@@ -1,15 +1,5 @@
 package com.example.appgiohang23032021.models;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-
 public class SaleOff {
     private int id;
     private String title;
@@ -45,14 +35,5 @@ public class SaleOff {
         this.percent = percent;
     }
 
-    public static List<SaleOff> getDataMock(){
-        return new ArrayList<>(Arrays.asList(
-                new SaleOff(1 , "Sale cho điện thoai iphone" , 5),
-                new SaleOff(2 , "Sale cho điện thoai oppo" , 0),
-                new SaleOff(3 , "Sale cho điện thoai realme" , 2),
-                new SaleOff(4 , "Sale cho điện thoai samsung" , 6),
-                new SaleOff(5 , "Sale cho điện thoai vivo" , 3),
-                new SaleOff(6 , "Sale cho điện thoai xiaomi" , 1)
-        ));
-    }
+
 }
