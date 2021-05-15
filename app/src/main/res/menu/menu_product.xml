@@ -8,4 +8,11 @@
         android:title="Search"
         app:showAsAction="always"/>
 
+    <item
+        android:icon="@drawable/ic_cart"
+        android:id="@+id/action_cart"
+        android:title="Cart"
+        app:showAsAction="always"
+        android:actionLayout="@layout/layout_menu_cart"/>
+
 </menu>
