@@ -1,6 +1,7 @@
 package com.example.appgiohang23032021;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
@@ -16,14 +17,19 @@ public class ProductListActivity extends AppCompatActivity {
     List<Product> mListProduct;
     RecyclerView mRcvProduct;
     ProductAdapter mProductAdapter;
+    Toolbar mToolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_list);
+        mRcvProduct = findViewById(R.id.recyclerViewProduct);
+        mToolbar = findViewById(R.id.toolbarProduct);
+
+        setSupportActionBar(mToolbar);
 
         mListProduct = Product.getDataMock();
 
-        mRcvProduct = findViewById(R.id.recyclerViewProduct);
+
         mProductAdapter = new ProductAdapter(mListProduct);
 
         mRcvProduct.setHasFixedSize(true);
