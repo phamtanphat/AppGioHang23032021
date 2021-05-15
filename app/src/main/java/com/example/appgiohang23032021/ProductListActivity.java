@@ -52,11 +52,13 @@ public class ProductListActivity extends AppCompatActivity {
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                mProductAdapter.getFilter().filter(query);
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                mProductAdapter.getFilter().filter(newText);
                 return true;
             }
         });

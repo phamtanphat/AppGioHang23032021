@@ -5,6 +5,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,15 +19,18 @@ import com.example.appgiohang23032021.models.SaleOff;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 
-public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
+public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> implements Filterable {
 
     private List<Product> mListProduct;
+    private List<Product> mListProductOld;
     private NumberFormat mNumberFormat;
 
     public ProductAdapter(List<Product> mListProduct) {
         this.mListProduct = mListProduct;
+        mListProductOld = mListProduct;
         mNumberFormat = new DecimalFormat("#,###");
 
     }
@@ -47,9 +52,9 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         holder.tvProductTitle.setText(currentProduct.getName());
         holder.tvProductPrice.setText(mNumberFormat.format(currentProduct.getPrice()) + " Đ");
 
-        if (currentProduct.getSaleOff().getPercent() <= 0){
+        if (currentProduct.getSaleOff().getPercent() <= 0) {
             holder.imgSale.setVisibility(View.GONE);
-        }else{
+        } else {
             holder.imgSale.setVisibility(View.VISIBLE);
         }
 
@@ -57,11 +62,41 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     @Override
     public int getItemCount() {
-        return mListProduct!= null && mListProduct.size() > 0 ? mListProduct.size() : 0;
+        return mListProduct != null && mListProduct.size() > 0 ? mListProduct.size() : 0;
     }
 
-    class ProductViewHolder extends RecyclerView.ViewHolder{
-        private ImageView imgProduct,imgSale;
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                String strSearch = charSequence.toString();
+                if (strSearch.isEmpty()){
+                    mListProduct = mListProductOld;
+                }else{
+                    List<Product> listProduct = new ArrayList<>();
+                    for (Product product: mListProductOld) {
+                        if (product.getName().toLowerCase().contains(strSearch.toLowerCase())){
+                            listProduct.add(product);
+                        }
+                    }
+                    mListProduct = listProduct;
+                }
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = mListProduct;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                mListProduct = (List<Product>) filterResults.values;
+                notifyDataSetChanged();
+            }
+        };
+    }
+
+    class ProductViewHolder extends RecyclerView.ViewHolder {
+        private ImageView imgProduct, imgSale;
         private TextView tvProductTitle, tvBuy;
         private TextView tvProductPrice;
 
