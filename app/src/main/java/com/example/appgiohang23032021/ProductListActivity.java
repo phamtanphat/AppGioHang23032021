@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.SearchManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import com.example.appgiohang23032021.adapter.ProductAdapter;
 import com.example.appgiohang23032021.constants.CartSingleton;
+import com.example.appgiohang23032021.interfaces.OnItemClickProduct;
 import com.example.appgiohang23032021.models.Product;
 import com.example.appgiohang23032021.models.SaleOff;
 
@@ -43,6 +45,16 @@ public class ProductListActivity extends AppCompatActivity {
 
         mRcvProduct.setHasFixedSize(true);
         mRcvProduct.setAdapter(mProductAdapter);
+
+        // event
+
+        mProductAdapter.setOnItemClickProduct(new OnItemClickProduct() {
+            @Override
+            public void onClick(int index) {
+                CartSingleton.getInstance().pushProduct(mListProduct.get(index));
+                Log.d("BBB",CartSingleton.getInstance().getCart().toString());
+            }
+        });
     }
 
     @Override
