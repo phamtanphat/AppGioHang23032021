@@ -52,7 +52,7 @@ public class ProductListActivity extends AppCompatActivity {
             @Override
             public void onClick(int index) {
                 CartSingleton.getInstance().pushProduct(mListProduct.get(index));
-                Log.d("BBB",CartSingleton.getInstance().getCart().toString());
+                setupBadge();
             }
         });
     }
@@ -83,9 +83,22 @@ public class ProductListActivity extends AppCompatActivity {
 
         View actionView = menuItem.getActionView();
         mTvBadgeCart = actionView.findViewById(R.id.textCartbage);
-
-
+        setupBadge();
 
         return true;
+    }
+
+    public void setupBadge(){
+        if (CartSingleton.getInstance().getCart().size() == 0){
+            if (mTvBadgeCart != null){
+                mTvBadgeCart.setVisibility(View.GONE);
+            }
+        }else{
+            if (mTvBadgeCart != null){
+                mTvBadgeCart.setVisibility(View.VISIBLE);
+                mTvBadgeCart.setText(CartSingleton.getInstance().getCart().size()+"");
+            }
+
+        }
     }
 }
