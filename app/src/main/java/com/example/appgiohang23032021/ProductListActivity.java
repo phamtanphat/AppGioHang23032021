@@ -1,17 +1,20 @@
 package com.example.appgiohang23032021;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.SearchManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.appgiohang23032021.adapter.ProductAdapter;
 import com.example.appgiohang23032021.constants.CartSingleton;
@@ -85,6 +88,24 @@ public class ProductListActivity extends AppCompatActivity {
         mTvBadgeCart = actionView.findViewById(R.id.textCartbage);
         setupBadge();
 
+        actionView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onOptionsItemSelected(menuItem);
+            }
+        });
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_cart :
+                Intent intent = new Intent(ProductListActivity.this,CartActivity.class);
+                startActivity(intent);
+                break;
+        }
         return true;
     }
 
