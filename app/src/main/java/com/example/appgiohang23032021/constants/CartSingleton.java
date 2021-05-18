@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CartSingleton {
-    private static List<Product> mList;
+    private List<Product> mList;
     private static CartSingleton mInstance = null;
 
     private CartSingleton() {

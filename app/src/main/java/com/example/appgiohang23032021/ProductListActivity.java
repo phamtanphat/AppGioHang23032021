@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.appgiohang23032021.adapter.ProductAdapter;
+import com.example.appgiohang23032021.constants.CartSingleton;
 import com.example.appgiohang23032021.models.Product;
 import com.example.appgiohang23032021.models.SaleOff;
 

@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appgiohang23032021.R;
+import com.example.appgiohang23032021.interfaces.OnItemClickProduct;
 import com.example.appgiohang23032021.models.Product;
 import com.example.appgiohang23032021.models.SaleOff;
 
@@ -27,6 +28,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     private List<Product> mListProduct;
     private List<Product> mListProductOld;
     private NumberFormat mNumberFormat;
+    private OnItemClickProduct mOnItemClickProduct;
 
     public ProductAdapter(List<Product> mListProduct) {
         this.mListProduct = mListProduct;
@@ -113,9 +115,14 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             tvBuy.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    if (mOnItemClickProduct != null){
+                        mOnItemClickProduct.onClick(getAdapterPosition());
+                    }
                 }
             });
         }
+    }
+    public void setOnItemClickProduct(OnItemClickProduct onItemClickProduct){
+        this.mOnItemClickProduct = onItemClickProduct;
     }
 }
