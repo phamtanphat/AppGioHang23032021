@@ -8,6 +8,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.SearchManager;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.example.appgiohang23032021.adapter.ProductAdapter;
 import com.example.appgiohang23032021.models.Product;
@@ -22,6 +25,7 @@ public class ProductListActivity extends AppCompatActivity {
     ProductAdapter mProductAdapter;
     Toolbar mToolbar;
     SearchView mSearchView;
+    TextView mTvBadgeCart;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +66,13 @@ public class ProductListActivity extends AppCompatActivity {
                 return true;
             }
         });
+        final MenuItem menuItem = menu.findItem(R.id.action_cart);
+
+        View actionView = menuItem.getActionView();
+        mTvBadgeCart = actionView.findViewById(R.id.textCartbage);
+
+
+
         return true;
     }
 }

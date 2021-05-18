@@ -70,6 +70,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         return new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence charSequence) {
+                Log.d("BBB","onSearch");
                 String strSearch = charSequence.toString();
                 if (strSearch.isEmpty()){
                     mListProduct = mListProductOld;
