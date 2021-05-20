@@ -48,7 +48,9 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         holder.imgCart.setImageResource(currentProduct.getImage());
         holder.tvName.setText(currentProduct.getName());
         holder.tvPrice.setText(Html.fromHtml( mNumberFormat.format(currentProduct.getPrice()) + " " + "<u>đ</u>"));
-        holder.tvPriceSale.setText(Html.fromHtml("<del>" +mNumberFormat.format(currentProduct.getPrice() * (100 - currentProduct.getSaleOff().getPercent()))) + "</del>");
+        String priceSale = mNumberFormat.format(currentProduct.getPrice() * (100 - currentProduct.getSaleOff().getPercent()));
+        String percent = currentProduct.getSaleOff().getPercent() + "%";
+        holder.tvPriceSale.setText(Html.fromHtml("<del>"+priceSale+"</del>" + "   " + percent.replace(".0","")) );
         holder.tvAmount.setText(currentProduct.getCount()+"");
     }
 
