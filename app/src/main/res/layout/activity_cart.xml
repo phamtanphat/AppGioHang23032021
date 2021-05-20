@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:weightSum="10"
     tools:context=".CartActivity">
     <androidx.appcompat.widget.Toolbar
         android:background="@color/light_red"
@@ -15,16 +16,28 @@
         app:titleTextColor="@color/white" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_weight="9.8"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <androidx.recyclerview.widget.RecyclerView
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/layout_item_cart"
             android:id="@+id/rv_product_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="4dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+    <Button
+        android:layout_marginBottom="10dp"
+        android:textColor="#FFFFFF"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_buy"
+        android:layout_gravity="center"
+        android:text="Payment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>
