@@ -7,12 +7,14 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +24,22 @@ import com.example.appgiohang23032021.interfaces.OnItemClickProduct;
 import com.example.appgiohang23032021.models.Product;
 import com.example.appgiohang23032021.models.SaleOff;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProductListActivity extends AppCompatActivity {
@@ -32,13 +50,13 @@ public class ProductListActivity extends AppCompatActivity {
     Toolbar mToolbar;
     SearchView mSearchView;
     TextView mTvBadgeCart;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_list);
         mRcvProduct = findViewById(R.id.recyclerViewProduct);
         mToolbar = findViewById(R.id.toolbarProduct);
-
         setSupportActionBar(mToolbar);
 
         mListProduct = Product.getDataMock();
@@ -58,11 +76,12 @@ public class ProductListActivity extends AppCompatActivity {
                 setupBadge();
             }
         });
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_product,menu);
+        getMenuInflater().inflate(R.menu.menu_product, menu);
         SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
         mSearchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
@@ -100,26 +119,28 @@ public class ProductListActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.action_cart :
-                Intent intent = new Intent(ProductListActivity.this,CartActivity.class);
+        switch (item.getItemId()) {
+            case R.id.action_cart:
+                Intent intent = new Intent(ProductListActivity.this, CartActivity.class);
                 startActivity(intent);
                 break;
         }
         return true;
     }
 
-    public void setupBadge(){
-        if (CartSingleton.getInstance().getCart().size() == 0){
-            if (mTvBadgeCart != null){
+    public void setupBadge() {
+        if (CartSingleton.getInstance().getCart().size() == 0) {
+            if (mTvBadgeCart != null) {
                 mTvBadgeCart.setVisibility(View.GONE);
             }
-        }else{
-            if (mTvBadgeCart != null){
+        } else {
+            if (mTvBadgeCart != null) {
                 mTvBadgeCart.setVisibility(View.VISIBLE);
-                mTvBadgeCart.setText(CartSingleton.getInstance().getCart().size()+"");
+                mTvBadgeCart.setText(CartSingleton.getInstance().getCart().size() + "");
             }
 
         }
     }
+
+
 }

@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.chauthai.swipereveallayout.ViewBinderHelper;
 import com.example.appgiohang23032021.R;
+import com.example.appgiohang23032021.interfaces.OnClickChangeAmount;
 import com.example.appgiohang23032021.models.Product;
 
 import java.text.DecimalFormat;
@@ -25,10 +26,13 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
     private List<Product> mListProduct;
     private NumberFormat mNumberFormat;
+    private ViewBinderHelper mViewBinderHelper;
+    private OnClickChangeAmount mOnClickChangeAmount;
 
     public CartAdapter(List<Product> products) {
         this.mListProduct = products;
         mNumberFormat = new DecimalFormat("#,###");
+        mViewBinderHelper = new ViewBinderHelper();
     }
 
 
@@ -45,13 +49,40 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         if (currentProduct == null) {
             return;
         }
+        mViewBinderHelper.bind(holder.swipeRevealLayout, String.valueOf(currentProduct.getId()));
         holder.imgCart.setImageResource(currentProduct.getImage());
         holder.tvName.setText(currentProduct.getName());
         holder.tvPrice.setText(Html.fromHtml( mNumberFormat.format(currentProduct.getPrice()) + " " + "<u>đ</u>"));
-        String priceSale = mNumberFormat.format(currentProduct.getPrice() * (100 - currentProduct.getSaleOff().getPercent()));
+        String priceSale = mNumberFormat.format(currentProduct.getPrice() * ((100 - currentProduct.getSaleOff().getPercent()) / 100 ));
         String percent = currentProduct.getSaleOff().getPercent() + "%";
         holder.tvPriceSale.setText(Html.fromHtml("<del>"+priceSale+"</del>" + "   " + percent.replace(".0","")) );
         holder.tvAmount.setText(currentProduct.getCount()+"");
+
+        holder.imgInCrease.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mOnClickChangeAmount != null){
+                    mOnClickChangeAmount.onChangeAmount(currentProduct.getId(),currentProduct.getCount() + 1);
+                }
+            }
+        });
+
+        holder.imgDeCrease.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mOnClickChangeAmount != null){
+                    mOnClickChangeAmount.onChangeAmount(currentProduct.getId(),currentProduct.getCount() - 1);
+                }
+            }
+        });
+        holder.layoutDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mOnClickChangeAmount != null){
+                    mOnClickChangeAmount.onChangeAmount(currentProduct.getId(),0);
+                }
+            }
+        });
     }
 
     @Override
@@ -83,4 +114,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         }
     }
 
+    public void setOnClickChangeAmount(OnClickChangeAmount onClickChangeAmount){
+        this.mOnClickChangeAmount = onClickChangeAmount;
+    }
 }

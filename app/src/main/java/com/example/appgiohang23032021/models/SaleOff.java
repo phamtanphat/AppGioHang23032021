@@ -1,5 +1,7 @@
 package com.example.appgiohang23032021.models;
 
+import androidx.annotation.NonNull;
+
 public class SaleOff {
     private int id;
     private String title;

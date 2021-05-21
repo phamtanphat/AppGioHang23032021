@@ -48,4 +48,9 @@ public class CartSingleton {
         return mList;
     }
 
+    public long priceProductSales(long price , double percent){
+        return (long) (price * ((100 - percent) / 100));
+    }
+
+
 }
