@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.appgiohang23032021.adapter.ProductAdapter;
+import com.example.appgiohang23032021.constants.AppCache;
 import com.example.appgiohang23032021.constants.CartSingleton;
 import com.example.appgiohang23032021.interfaces.OnItemClickProduct;
 import com.example.appgiohang23032021.models.Product;
@@ -68,11 +69,6 @@ public class ProductListActivity extends AppCompatActivity {
         mRcvProduct.setAdapter(mProductAdapter);
 
         // event
-        try {
-            createJson();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
         mProductAdapter.setOnItemClickProduct(new OnItemClickProduct() {
             @Override
@@ -147,65 +143,7 @@ public class ProductListActivity extends AppCompatActivity {
         }
     }
 
-    private void createJson() throws JSONException {
-        List<Product> products = Product.getDataMock();
-        JSONArray jsonArray = new JSONArray();
-        for (int i = 0; i < products.size(); i++) {
-            JSONObject jsonObjectSale = new JSONObject();
-            jsonObjectSale.put("id", products.get(i).getSaleOff().getId());
-            jsonObjectSale.put("title", products.get(i).getSaleOff().getTitle());
-            jsonObjectSale.put("percent", products.get(i).getSaleOff().getPercent());
 
-            JSONObject jsonObjectProduct = new JSONObject();
-            jsonObjectProduct.put("id", products.get(i).getId());
-            jsonObjectProduct.put("name", products.get(i).getName());
-            jsonObjectProduct.put("price", products.get(i).getPrice());
-            jsonObjectProduct.put("saleOff", jsonObjectSale);
-            jsonObjectProduct.put("count", products.get(i).getCount());
-            jsonObjectProduct.put("image", products.get(i).getImage());
 
-            jsonArray.put(jsonObjectProduct);
-        }
-        createFile(jsonArray.toString());
-//        JSONArray jsonArray1 = new JSONArray(readFromFile());
-    }
 
-    private void createFile(String data) {
-        try {
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(openFileOutput("cart.txt", Context.MODE_PRIVATE));
-            outputStreamWriter.write(data);
-            outputStreamWriter.close();
-        } catch (IOException e) {
-            Log.e("Exception", "File write failed: " + e.toString());
-        }
-    }
-
-    private String readFromFile() {
-
-        String result = "";
-
-        try {
-            InputStream inputStream = openFileInput("cart.txt");
-
-            if (inputStream != null) {
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                String receiveString = "";
-                StringBuilder stringBuilder = new StringBuilder();
-
-                while ((receiveString = bufferedReader.readLine()) != null) {
-                    stringBuilder.append(receiveString);
-                }
-
-                inputStream.close();
-                result = stringBuilder.toString();
-            }
-        } catch (FileNotFoundException e) {
-            Log.e("login activity", "File not found: " + e.toString());
-        } catch (IOException e) {
-            Log.e("login activity", "Can not read file: " + e.toString());
-        }
-
-        return result;
-    }
 }

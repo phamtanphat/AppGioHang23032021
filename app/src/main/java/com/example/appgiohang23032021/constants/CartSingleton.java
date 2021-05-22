@@ -2,6 +2,10 @@ package com.example.appgiohang23032021.constants;
 
 import com.example.appgiohang23032021.models.Product;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +54,34 @@ public class CartSingleton {
 
     public long priceProductSales(long price , double percent){
         return (long) (price * ((100 - percent) / 100));
+    }
+
+    public JSONArray createJson(List<Product> products){
+        JSONArray jsonArray = new JSONArray();
+        if (products.size() == 0 ){
+            return jsonArray;
+        }
+        for (int i = 0; i < products.size(); i++) {
+            try {
+                JSONObject jsonObjectSale = new JSONObject();
+                jsonObjectSale.put("id", products.get(i).getSaleOff().getId());
+                jsonObjectSale.put("title", products.get(i).getSaleOff().getTitle());
+                jsonObjectSale.put("percent", products.get(i).getSaleOff().getPercent());
+
+                JSONObject jsonObjectProduct = new JSONObject();
+                jsonObjectProduct.put("id", products.get(i).getId());
+                jsonObjectProduct.put("name", products.get(i).getName());
+                jsonObjectProduct.put("price", products.get(i).getPrice());
+                jsonObjectProduct.put("saleOff", jsonObjectSale);
+                jsonObjectProduct.put("count", products.get(i).getCount());
+                jsonObjectProduct.put("image", products.get(i).getImage());
+
+                jsonArray.put(jsonObjectProduct);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return jsonArray;
     }
 
 
