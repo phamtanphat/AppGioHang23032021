@@ -1,6 +1,7 @@
 package com.example.appgiohang23032021.constants;
 
 import com.example.appgiohang23032021.models.Product;
+import com.example.appgiohang23032021.models.SaleOff;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,6 +44,9 @@ public class CartSingleton {
             }
         }
     }
+    public void addAllCarts(List<Product> products){
+        this.mList = products;
+    }
 
     public void clearCart(){
         mList.clear();
@@ -84,5 +88,32 @@ public class CartSingleton {
         return jsonArray;
     }
 
+    public List<Product> tranFormStringToListProduct(String data){
+        List<Product> products = new ArrayList<>();
+        try {
+            JSONArray jsonArray = new JSONArray(data);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObjectProduct = (JSONObject) jsonArray.get(i);
+                long id = jsonObjectProduct.getLong("id");
+                String name = jsonObjectProduct.getString("name");
+                double price = jsonObjectProduct.getDouble("price");
+                int count = jsonObjectProduct.getInt("count");
+                int image = jsonObjectProduct.getInt("image");
+
+                JSONObject jsonObjectSale = jsonObjectProduct.getJSONObject("saleOff");
+                int idSale = jsonObjectSale.getInt("id");
+                String title = jsonObjectSale.getString("title");
+                double percent = jsonObjectSale.getDouble("percent");
+
+                SaleOff saleOff = new SaleOff(idSale,title,percent);
+                Product product = new Product(id,name,image,price,saleOff,count);
+
+                products.add(product);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return products;
+    }
 
 }

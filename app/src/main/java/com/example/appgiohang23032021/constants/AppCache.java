@@ -5,7 +5,6 @@ import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -60,6 +59,8 @@ public class AppCache {
 
                 inputStream.close();
                 result = stringBuilder.toString();
+            }else{
+                return result;
             }
         } catch (FileNotFoundException e) {
             Log.e("login activity", "File not found: " + e.toString());

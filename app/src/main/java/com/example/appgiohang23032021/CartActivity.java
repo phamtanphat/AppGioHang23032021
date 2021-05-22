@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.appgiohang23032021.adapter.CartAdapter;
+import com.example.appgiohang23032021.constants.AppCache;
 import com.example.appgiohang23032021.constants.CartSingleton;
 import com.example.appgiohang23032021.interfaces.OnClickChangeAmount;
 import com.example.appgiohang23032021.models.Product;
@@ -49,7 +50,9 @@ public class CartActivity extends AppCompatActivity {
                     }
                 }
                 priceTotal();
-
+                if (!AppCache.createFile(CartSingleton.getInstance().createJson(CartSingleton.getInstance().getCart()).toString(),CartActivity.this)){
+                    AppCache.deleteFile(CartActivity.this);
+                }
             }
         });
     }

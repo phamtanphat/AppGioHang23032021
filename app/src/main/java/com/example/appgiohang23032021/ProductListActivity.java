@@ -70,11 +70,19 @@ public class ProductListActivity extends AppCompatActivity {
 
         // event
 
+        if (!AppCache.readFile(ProductListActivity.this).equals("")){
+            String data = AppCache.readFile(ProductListActivity.this);
+            CartSingleton.getInstance().addAllCarts(CartSingleton.getInstance().tranFormStringToListProduct(data));
+        }
+
         mProductAdapter.setOnItemClickProduct(new OnItemClickProduct() {
             @Override
             public void onClick(int index) {
                 CartSingleton.getInstance().pushProduct(mListProduct.get(index));
                 setupBadge();
+                if (!AppCache.createFile(CartSingleton.getInstance().createJson(CartSingleton.getInstance().getCart()).toString(),ProductListActivity.this)){
+                    AppCache.deleteFile(ProductListActivity.this);
+                }
             }
         });
 
