@@ -35,6 +35,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         mViewBinderHelper = new ViewBinderHelper();
     }
 
+    public List<Product> getList(){
+        if (mListProduct!= null){
+            return mListProduct;
+        }
+        return null;
+    }
 
     @NonNull
     @Override
@@ -45,7 +51,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
-        Product currentProduct = mListProduct.get(position);
+        Product currentProduct = mListProduct.get(holder.getAdapterPosition());
         if (currentProduct == null) {
             return;
         }
@@ -66,6 +72,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
                 if (mOnClickChangeAmount != null){
                     mOnClickChangeAmount.onChangeAmount(currentProduct.getId(),currentProduct.getCount() + 1);
                 }
+                notifyItemChanged(holder.getAdapterPosition());
             }
         });
 
@@ -75,6 +82,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
                 if (mOnClickChangeAmount != null){
                     mOnClickChangeAmount.onChangeAmount(currentProduct.getId(),currentProduct.getCount() - 1);
                 }
+                notifyItemChanged(holder.getAdapterPosition());
             }
         });
         holder.layoutDelete.setOnClickListener(new View.OnClickListener() {
@@ -83,6 +91,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
                 if (mOnClickChangeAmount != null){
                     mOnClickChangeAmount.onChangeAmount(currentProduct.getId(),0);
                 }
+                notifyDataSetChanged();
             }
         });
     }

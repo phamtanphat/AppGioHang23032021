@@ -79,7 +79,7 @@ public class Product {
                 new Product(4,"Vivo V21 5G", R.drawable.hinhvivov21,9990000,new SaleOff(5 , "Sale cho điện thoai vivo" , 3) , 1),
                 new Product(5,"Realme 8 Pro", R.drawable.hinhrealme8,8690000,new SaleOff(3 , "Sale cho điện thoai realme" , 2) , 1),
                 new Product(6,"Xiami Redme 9T", R.drawable.hinhxiaomiredme9t,4290000,new SaleOff(3 , "Sale cho điện thoai realme" , 2) , 1),
-                new Product(7,"Oppo A74 5G", R.drawable.hinhoppoa74,7490000,new SaleOff(2 , "Sale cho điện thoai oppo" , 0) , 0),
+                new Product(7,"Oppo A74 5G", R.drawable.hinhoppoa74,7490000,new SaleOff(2 , "Sale cho điện thoai oppo" , 0) , 1),
                 new Product(8,"Samsung Galaxy A32", R.drawable.hinhsamsunggalaxya32,6490000,new SaleOff(4 , "Sale cho điện thoai samsung" , 6) , 1)
 
         ));

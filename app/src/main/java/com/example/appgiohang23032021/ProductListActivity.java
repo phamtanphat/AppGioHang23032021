@@ -1,46 +1,27 @@
 package com.example.appgiohang23032021;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.appgiohang23032021.adapter.ProductAdapter;
 import com.example.appgiohang23032021.constants.AppCache;
 import com.example.appgiohang23032021.constants.CartSingleton;
 import com.example.appgiohang23032021.interfaces.OnItemClickProduct;
 import com.example.appgiohang23032021.models.Product;
-import com.example.appgiohang23032021.models.SaleOff;
+import com.example.appgiohang23032021.models.Response;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ProductListActivity extends AppCompatActivity {
@@ -51,6 +32,7 @@ public class ProductListActivity extends AppCompatActivity {
     Toolbar mToolbar;
     SearchView mSearchView;
     TextView mTvBadgeCart;
+    Response mResponse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,9 +52,12 @@ public class ProductListActivity extends AppCompatActivity {
 
         // event
 
-        if (!AppCache.readFile(ProductListActivity.this).equals("")){
-            String data = AppCache.readFile(ProductListActivity.this);
-            CartSingleton.getInstance().addAllCarts(CartSingleton.getInstance().tranFormStringToListProduct(data));
+        if (AppCache.checkFileExists(ProductListActivity.this)) {
+            mResponse = CartSingleton.getInstance().tranFormStringToResponseData(AppCache.readFile(ProductListActivity.this));
+            List<Product> listProducts = mResponse.getProducts();
+            if (listProducts != null && listProducts.size() > 0) {
+                CartSingleton.getInstance().addAllCarts(listProducts);
+            }
         }
 
         mProductAdapter.setOnItemClickProduct(new OnItemClickProduct() {
@@ -80,9 +65,11 @@ public class ProductListActivity extends AppCompatActivity {
             public void onClick(int index) {
                 CartSingleton.getInstance().pushProduct(mListProduct.get(index));
                 setupBadge();
-                if (!AppCache.createFile(CartSingleton.getInstance().createJson(CartSingleton.getInstance().getCart()).toString(),ProductListActivity.this)){
-                    AppCache.deleteFile(ProductListActivity.this);
+                if (AppCache.checkFileExists(ProductListActivity.this)) {
+                    mResponse.setProducts(CartSingleton.getInstance().getCart());
+                    AppCache.updateFile(ProductListActivity.this,CartSingleton.getInstance().createJson(mResponse.getUser(),mResponse.getProducts()).toString());
                 }
+
             }
         });
 
@@ -131,7 +118,7 @@ public class ProductListActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_cart:
                 Intent intent = new Intent(ProductListActivity.this, CartActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent,123);
                 break;
         }
         return true;
@@ -145,13 +132,19 @@ public class ProductListActivity extends AppCompatActivity {
         } else {
             if (mTvBadgeCart != null) {
                 mTvBadgeCart.setVisibility(View.VISIBLE);
-                mTvBadgeCart.setText(CartSingleton.getInstance().getCart().size() + "");
+                int count = 0;
+                for (Product product : CartSingleton.getInstance().getCart()){
+                    count += product.getCount();
+                }
+                mTvBadgeCart.setText(count + "");
             }
 
         }
     }
 
-
-
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        setupBadge();
+    }
 }

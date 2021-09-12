@@ -9,7 +9,7 @@
     tools:context=".CartActivity">
     <androidx.appcompat.widget.Toolbar
         android:background="@color/light_red"
-        android:id="@+id/topAppBar_list"
+        android:id="@+id/toolbarCart"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         app:title="Cart"

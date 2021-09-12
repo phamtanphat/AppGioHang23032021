@@ -1,7 +1,9 @@
 package com.example.appgiohang23032021.constants;
 
 import com.example.appgiohang23032021.models.Product;
+import com.example.appgiohang23032021.models.Response;
 import com.example.appgiohang23032021.models.SaleOff;
+import com.example.appgiohang23032021.models.User;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,48 +27,63 @@ public class CartSingleton {
         return mInstance;
     }
 
-    public void pushProduct(Product product){
+    public void pushProduct(Product product) {
         boolean instance = false;
-        if (mList.size() == 0 ){
+        if (mList.size() == 0) {
             mList.add(product);
-        }else{
-            for (int i = 0 ; i < mList.size() ; i++){
-                if (product.getId() == mList.get(i).getId()){
+        } else {
+            for (int i = 0; i < mList.size(); i++) {
+                if (product.getId() == mList.get(i).getId()) {
                     mList.get(i).setCount(mList.get(i).getCount() + 1);
                     instance = true;
                     break;
-                }else{
+                } else {
                     instance = false;
                 }
             }
-            if (!instance){
+            if (!instance) {
                 mList.add(product);
             }
         }
     }
-    public void addAllCarts(List<Product> products){
+
+    public void addAllCarts(List<Product> products) {
         this.mList = products;
     }
 
-    public void clearCart(){
+    public void clearCart() {
         mList.clear();
     }
 
-    public List<Product> getCart(){
+    public List<Product> getCart() {
         return mList;
     }
 
-    public long priceProductSales(long price , double percent){
+    public long priceProductSales(long price, double percent) {
         return (long) (price * ((100 - percent) / 100));
     }
 
-    public JSONArray createJson(List<Product> products){
-        JSONArray jsonArray = new JSONArray();
-        if (products.size() == 0 ){
-            return jsonArray;
-        }
-        for (int i = 0; i < products.size(); i++) {
-            try {
+    public JSONObject createJson(User user, List<Product> products) {
+        JSONObject jsonObjectResult = new JSONObject();
+        try {
+
+            // object user
+            JSONObject jsonUserObject = new JSONObject();
+            jsonUserObject.put("email", user.getEmail());
+            jsonUserObject.put("password", user.getPassword());
+            jsonUserObject.put("isLogin", user.isLogin());
+
+            // arrayCart
+            JSONArray jsonCartArray = new JSONArray();
+
+            if (products == null || products.size() == 0){
+                jsonObjectResult.put("user", jsonUserObject);
+                jsonObjectResult.put("cart", "[]");
+                return jsonObjectResult;
+            }
+
+            for (int i = 0; i < products.size(); i++) {
+
                 JSONObject jsonObjectSale = new JSONObject();
                 jsonObjectSale.put("id", products.get(i).getSaleOff().getId());
                 jsonObjectSale.put("title", products.get(i).getSaleOff().getTitle());
@@ -80,18 +97,35 @@ public class CartSingleton {
                 jsonObjectProduct.put("count", products.get(i).getCount());
                 jsonObjectProduct.put("image", products.get(i).getImage());
 
-                jsonArray.put(jsonObjectProduct);
-            } catch (JSONException e) {
-                e.printStackTrace();
+                jsonCartArray.put(jsonObjectProduct);
+
             }
+
+            jsonObjectResult.put("user", jsonUserObject);
+            jsonObjectResult.put("cart", jsonCartArray);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-        return jsonArray;
+        return jsonObjectResult;
     }
 
-    public List<Product> tranFormStringToListProduct(String data){
+    public Response tranFormStringToResponseData(String data) {
+        Response response = new Response();
+
         List<Product> products = new ArrayList<>();
         try {
-            JSONArray jsonArray = new JSONArray(data);
+            JSONObject jsonObjectData = new JSONObject(data);
+
+            // get User
+            JSONObject jsonObjectUser = jsonObjectData.getJSONObject("user");
+            String email = jsonObjectUser.getString("email");
+            String password = jsonObjectUser.getString("password");
+            boolean isLogin = jsonObjectUser.getBoolean("isLogin");
+            response.setUser(new User(email, password, isLogin));
+
+
+            // get Cart
+            JSONArray jsonArray = jsonObjectData.getJSONArray("cart");
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObjectProduct = (JSONObject) jsonArray.get(i);
                 long id = jsonObjectProduct.getLong("id");
@@ -105,15 +139,16 @@ public class CartSingleton {
                 String title = jsonObjectSale.getString("title");
                 double percent = jsonObjectSale.getDouble("percent");
 
-                SaleOff saleOff = new SaleOff(idSale,title,percent);
-                Product product = new Product(id,name,image,price,saleOff,count);
+                SaleOff saleOff = new SaleOff(idSale, title, percent);
+                Product product = new Product(id, name, image, price, saleOff, count);
 
                 products.add(product);
             }
+            response.setProducts(products);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return products;
+        return response;
     }
 
 }
